@@ -24,6 +24,7 @@ const HomeScreen = () => {
     <View>
       <Text>Welcome</Text>
       {productListViews}
+      <Button title="add post" onPress={() => navigation.navigate("Add")} />
     </View>
   );
 };

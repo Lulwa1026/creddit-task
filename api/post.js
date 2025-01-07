@@ -10,12 +10,41 @@ async function getPosts() {
   }
 }
 
-// const getPostsById = async (id) => {
-//   const data = await instance.get(`/posts/${id}` );
-//   console.log("getPostsById", data)
-//   return data;
-// };
+async function getPostById(id) {
+  const response = await instance.get(`/posts/${id}`);
+  console.log("getPostById", response);
+  return response;
+}
+
+async function addPost(formData) {
+  const response = await instance.post("/posts", formData);
+  console.log("addPost", response);
+  return response;
+}
+
+async function deletePostById(id) {
+  const response = await instance.delete(`/posts/${id}`);
+  console.log("deletePostById", response);
+  return response;
+}
+
+async function addComment(id, formData) {
+  const response = await instance.post(`/posts/comments/${id}`, formData);
+  console.log("addComment", response);
+  return response;
+}
+
+async function deleteComment(id) {
+  const response = await instance.post(`/posts/comments/${id}`);
+  console.log("deleteComment", response);
+  return response;
+}
 
 export {
-  getPosts, //getPostsById
+  getPosts,
+  getPostById,
+  addPost,
+  deletePostById,
+  addComment,
+  deleteComment,
 };
