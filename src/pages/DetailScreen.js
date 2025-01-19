@@ -1,44 +1,52 @@
-import { View, Text, TouchableOpacity, Button, Alert } from "react-native";
+import {
+  View,
+  Text,
+  Button,
+  ActivityIndicator,
+  Alert,
+  ScrollView,
+} from "react-native";
 import React from "react";
-import { getPostById, deletePostById, addComment } from "../../api/post";
-import { useQuery } from "@tanstack/react-query";
+import { getPostById, deletePostById } from "../../api/post";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigation } from "@react-navigation/native";
 import { useMutation } from "@tanstack/react-query";
+import { deletePost } from "../../api/post";
+
 const DetailScreen = ({ route }) => {
-  const { description } = route.params;
-  const { postId } = route.params;
-  const { data, isFetching, isSuccess } = useQuery({
-    queryKey: ["postId"],
+  const { description, postId } = route.params;
+  const navigation = useNavigation();
+  const queryClient = useQueryClient();
+
+  const { data } = useQuery({
+    queryKey: ["post", postId],
     queryFn: () => getPostById(postId),
   });
-
-  const postMmutation = useMutation({
-    mutationFn: (id) => deletePost(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["Posts", id] });
-    },
-  });
+  // const { data: post } = useQuery({
+  //   queryKey: ["post", postId],
+  //   queryFn: () => getPostById(postId),
+  // });
   const mutation = useMutation({
-    mutationKey: ["deletePost"],
-    mutationFn: () => deletePostById(postId),
+    mutationFn: deletePost,
     onSuccess: () => {
-      navigation.navigate("Home");
+      queryClient.invalidateQueries(["posts", id]);
     },
   });
 
-  const handleDelete = () => {
-    mutation.mutate(postId);
+  const handleDelete = (id) => {
+    mutation.mutate(id);
     navigation.navigate("Home");
   };
 
-  const navigation = useNavigation();
-
   return (
-    <View>
-      <Text>welcom to detail page</Text>
-      <Text>{description}</Text>
-      <Text>{}</Text>
-      <Button title="Delete" onPress={handleDelete} />
+    <View style={{ padding: 20 }}>
+      <Text style={{ fontSize: 24, fontWeight: "bold" }}>Post Details</Text>
+      <Text style={{ marginVertical: 10 }}>{description}</Text>
+      <Button title="delete" onPress={() => handleDelete(data?.id)}></Button>
+      <Button
+        title="add comment"
+        onPress={() => navigation.navigate("Add Comment")}
+      />
     </View>
   );
 };

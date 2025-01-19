@@ -1,4 +1,5 @@
 import instance from "./index.js";
+import axios from "axios";
 
 async function getPosts() {
   try {
@@ -10,9 +11,20 @@ async function getPosts() {
   }
 }
 
+// async function getPostById(id) {
+//   try {
+//     const response = await instance.get(`/posts/${id}`);
+//     console.log("getPostById response:", response.data);
+//     return response.data;
+//   } catch (error) {
+//     console.error("Error fetching post:", error);
+//     throw error;
+//   }
+// }
+
 async function getPostById(id) {
   const response = await instance.get(`/posts/${id}`);
-  console.log("getPostById", response);
+  console.log(response);
   return response;
 }
 
